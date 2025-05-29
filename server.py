@@ -643,5 +643,16 @@ def ratelimit_handler(e):
     }), 429
 
 if __name__ == '__main__':
-    logger.info("Starting M-Pesa server...")
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    # Production configuration for EC2
+    logger.info("Starting M-Pesa server on EC2...")
+    app.config['SERVER_NAME'] = '3.144.107.16:5000'  # Public IP
+    app.config['PREFERRED_URL_SCHEME'] = 'http'
+    
+    # Configure host to listen on private IP
+    app.run(
+        host='172.31.9.246',  # Private IP
+        port=5000,
+        debug=False,
+        threaded=True,
+        ssl_context=None  # Disable SSL for now - consider using HTTPS in production
+    )
